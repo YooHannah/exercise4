@@ -4,52 +4,46 @@ describe('this', function () {
       say: function () {
         setTimeout(() => {
           // this 是什么？想想为什么？
-          this.should.equal(obj) //setTimeout 第一个参数函数里面的this
+          this.should.equal(obj)//箭头函数this指向所属对象
           done()
         }, 0)
       }
     }
     obj.say()
-  })
+  }) 
 
- it('global', function () {
-    var obj=null;
+  it('global', function () {
     function test() {
       // this 是什么？想想为什么？
-      this.should.equal(null)
+      this.should.equal(global)
     }
-    test.bind(obj);
+    test()
   })
 
   describe('bind', function () {
     it('bind undefined', function () {
       var obj = {
         say: function () {
-          var that=this;
           function _say() {
-            // this 是什么？想想为什么？this指向window·
-            that.should.equal(null)
+            // this 是什么？想想为什么？
+            this.should.equal(global) //_say()运行时的调用者是global
           }
           return _say.bind(obj)
         }()
       }
-      var temp = null;
-      obj.say.bind(temp);
+      obj.say()
     })
 
     it('bind normal', function () {
       var obj = {}
       obj.say = function () {
         function _say() {
-          // this 是什么？想想为什么？this指向调用say函数的对象
-          this.should.equal(null)
+          // this 是什么？想想为什么？
+          this.should.equal(obj) //this总是指向它定义时的所属对象
         }
         return _say.bind(obj)
       }()
-      var temp = null;
-      obj.say.bind(temp);
-      // obj.say();
+      obj.say()
     })
-
   })
 })
